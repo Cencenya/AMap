@@ -3,6 +3,7 @@ import { AMapKey } from '../config/index';
 import ReactDOM from "react-dom";
 import MarkerInfo from '../components/MarkInfo/index'
 import React from "react";
+import { createRoot } from 'react-dom/client';
 export type LoaderConfig = Parameters<typeof AMapLoader.load>[0]
 type MapInstanceOptions = Partial<AMap.MapOptions>
 
@@ -151,7 +152,10 @@ class _AMap {
                     this.map.remove(this.marker)
                     this.map.add(marker);
                     this.marker.push(marker)
-                    ReactDOM.render(<MarkerInfo title={location.NAME_CHN} />, document.getElementById(`${id}`))
+                    const domNode = document.getElementById(`${id}`);
+                    const root = createRoot(domNode);
+                    root.render(<MarkerInfo title={location.NAME_CHN} />)
+                    // ReactDOM.createRoot(<MarkerInfo title={location.NAME_CHN} />, document.getElementById(`${id}`))
 
                     disCountry.setStyles({
                         // @ts-ignore
