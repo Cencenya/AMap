@@ -1,0 +1,1 @@
+export const AMapKey = 'b90b315cb4d29262297ba38a93e1817c'
