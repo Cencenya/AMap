@@ -105,7 +105,7 @@ class _AMap {
         }
     }
     @retryOnMissingAMap(3)
-    async createMapInstance(dom: string, options: MapInstanceOptions) {
+    async createMapInstance(dom: any, options: MapInstanceOptions) {
         try {
             const disCountry = new window.AMap.DistrictLayer.Country({
                 zIndex: 10,
@@ -123,6 +123,7 @@ class _AMap {
                 }
             });
             this.layer.push(disCountry);
+            console.log('1111111', window.AMap);
             const map = new window.AMap.Map(dom, {
                 zooms: [4, 8],
                 center: [105.602725, 37.076636],

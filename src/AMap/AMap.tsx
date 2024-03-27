@@ -6,11 +6,11 @@ type AMapInstance = typeof window.AMap
 export type LoaderConfig = Parameters<typeof AMapLoader.load>[0];
 type MapInstanceOptions = Partial<AMap.MapOptions>
 interface AMapProps {
-    styles: CSSProperties;
-    config: LoaderConfig;
-    onLoaded: (map: AMapInstance, mapDom: HTMLDivElement) => void;
-    children: ReactNode;
-    mapOpts: MapInstanceOptions
+    styles?: CSSProperties;
+    config?: LoaderConfig;
+    onLoaded?: (map: AMapInstance, mapDom: HTMLDivElement) => void;
+    children?: ReactNode;
+    mapOpts?: MapInstanceOptions
 }
 const AMap: React.FC<AMapProps> = (props) => {
     const { styles, config, onLoaded, children, mapOpts } = props;
@@ -18,15 +18,17 @@ const AMap: React.FC<AMapProps> = (props) => {
     const mapRef = useRef<null | HTMLDivElement>()
     useEffect(() => {
         if (!mapRef.current) return;
-        initMapLoader();
-    }, [mapRef]);
+        // initMapLoader();
+        console.log('initMap')
+        initMap()
+    }, []);
 
-    const initMapLoader = async () => {
-        const Amap = await AMapLoader.load(config);
-        const map = new Amap.Map(mapRef, mapOpts)
-        setMap(map);
-        onLoaded(map, mapRef.current);
-    }
+    // const initMapLoader = async () => {
+    //     const Amap = await AMapLoader.load(config);
+    //     const map = new Amap.Map(mapRef, mapOpts)
+    //     setMap(map);
+    //     onLoaded(map, mapRef.current);
+    // }
 
     const initMap = async () => {
         const newMap = new _AMap();
@@ -35,7 +37,7 @@ const AMap: React.FC<AMapProps> = (props) => {
             version: "2.0",
             plugins: ['AMap.Scale']
         },)
-        const lnglat = new window.AMap.LngLat(106.122082, 33.719192);
+        // const lnglat = new window.AMap.LngLat(106.122082, 33.719192);
         // newMap.createCountryDistrictLayer({
         //   zIndex: 10,
         //   SOC: 'CHN',
@@ -69,7 +71,7 @@ const AMap: React.FC<AMapProps> = (props) => {
         })
     }
     return <main style={styles} >
-        <div ref={mapRef} />
+        <div ref={mapRef} id="container" />
         {renderchildren()}
     </main>
 }

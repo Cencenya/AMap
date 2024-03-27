@@ -1,20 +1,29 @@
 import { ReactElement, ReactNode } from "react"
-import styles from './index.module.less'
+import styles from './index.module.less';
+import AMap from "@/AMap/AMap";
+import { Col, Row, Slider } from 'antd';
+import cn from 'classnames';
+import React from "react";
 interface DataBriefProps {
     data: Array<any>
 
 }
 export function DataBrief(props: DataBriefProps) {
+    const { data } = props;
+    const length = data.length;
+    const wrap = length > 6;
+
     return <CardLayout
         title='数据简报'
     >
-        {
-            props.data.map((item) => {
-                return <section className={styles.card}>
+        <div className={wrap ? styles.wrapList : styles.list}>
+            {props.data.map((item, index) => (
+                <div key={index} className={styles.card}>
+
                     {item.title}
-                </section>
-            })
-        }
+                </div>
+            ))}
+        </div>
 
     </CardLayout>
 }
@@ -44,13 +53,19 @@ export function StoreStatus(props: StoreStatusProps) {
 interface StoreMapProps {
     // data: Array<any>
 }
-export function StoreMap(props: StoreMapProps) {
+function StoreMap_(props: StoreMapProps) {
+    console.log('StoreMap_')
     return <CardLayout
         title='门店地图'
     >
-        StoreMap
+        <section>
+            <AMap
+            />
+
+        </section>
     </CardLayout>
 }
+export const StoreMap = React.memo(StoreMap_)
 
 interface ConversionFunnelsProps {
     data: Array<any>

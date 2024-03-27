@@ -29,8 +29,11 @@
 }
 
 .cardLayout{
-    width: 100%;
+    width: calc(100vw - 350px);
     padding: 8px;
+    background-color: gray;
+    border-radius: 8px;
+    margin-bottom: 8px;
     .header{
         width: 100%;
         height: 88px;
@@ -38,10 +41,33 @@
         font-weight: 500;
     }
 }
-.card{
-    width: 100px;
-    height: 100px;
+// .card{
+//     width: 100px;
+//     height: 100px;
+//     display: flex;
+//     justify-content: center;
+//     margin-right: 10px;
+// }
+
+.list {
     display: flex;
-    justify-content: center;
-    margin-right: 10px;
-}
+    flex-wrap: nowrap;
+    width: 100%;
+  
+    .card {
+     width: 100%;
+     height: 88px;
+     flex-grow: 1;
+    }
+  }
+  
+  .wrapList{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    .card {
+        width: 100%;
+        height: 88px;
+        flex: 1 0 25%;
+       }
+  }
