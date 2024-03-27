@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "experimentalDecorators":true,
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "dom.iterable",
@@ -20,7 +21,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["src/*"]
+    },
   },
   "include": [
     "src",
