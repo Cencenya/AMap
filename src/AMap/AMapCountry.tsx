@@ -79,18 +79,107 @@ function gradientBlueColor(adcode) {
 }
 function AMapCountry(props: AMapCountry) {
     const { map, AMap, updateAMapLoader, updateMap, destroyMap } = useAMapContext();
-    const [render, setRender] = useState(false);
-    const [markerList, setMarkerList] = useState([])
+    const [disCountry, setDisCountry] = useState([])
     useEffect(() => {
         if (!map) return;
         initDistrictLayer()
-
     }, [map])
+
+    const renderMarker = debounce((lnglat, info) => {
+        const id = Date.now();
+        console.log('event.lnglat', lnglat)
+        const marker = new window.AMap.Marker({
+            position: lnglat,
+            content: `<div id="${id}"></div>`,
+            offset: new AMap.Pixel(5, 5),
+
+        })
+        map.clearMap();
+        map.add(marker);
+        // setMarkerList([marker])
+        const domNode = document.getElementById(`${id}`);
+        const root = createRoot(domNode);
+        root.render(<MarkerInfo title={info.NAME_CHN} />)
+    }, 100);
+
+
+    const handleCountryMouseMove = (event, disCountry) => {
+        const px = event.origin.pixel;
+        const lnglat = event.origin.lnglat;
+        // 拾取所在位置的行政区
+        // @ts-ignore
+        // console.log('handleCountryMouseMove', disCountry)
+        const location = disCountry.getDistrictByContainerPos(px);
+
+        if (location && location.adcode_pro) {
+            renderMarker(lnglat, location)
+            disCountry.setStyles({
+                // @ts-ignore
+                'fill': function (props) {
+                    return props.adcode_pro === location.adcode_pro ? 'rgb(255,140,0)' : getColorByDGP(props.adcode_pro)
+                }
+            })
+        } else {
+            map.clearMap();
+            disCountry.setStyles({
+                // @ts-ignore
+                'fill': function (props) {
+                    return getColorByDGP(props.adcode_pro)
+                }
+            })
+
+        }
+    }
+
+    const handleProvinceMouseMove = (event, disProvince) => {
+        const px = event.origin.pixel;
+        const lnglat = event.origin.lnglat;
+
+        // 拾取所在位置的行政区
+        // @ts-ignore
+
+        if (!px) return;
+        const location = disProvince.getDistrictByContainerPos(px);
+        console.log('location', location);
+        if (location && location.adcode_pro) {
+            renderMarker(lnglat, location)
+            disProvince.setStyles({
+                // @ts-ignore
+                'fill': function (props) {
+                    return props.adcode === location.adcode ? 'rgb(255,140,0)' : getColorByDGP(props.adcode)
+                }
+            })
+        } else {
+            map.clearMap();
+            disProvince.setStyles({
+                // @ts-ignore
+                'fill': function (props) {
+                    return getColorByDGP(props.adcode)
+                }
+            })
+
+        }
+    }
+
+    const handleDbClick = (event, disCountry) => {
+        var px = event.pixel;
+        // 拾取所在位置的行政区
+        // @ts-ignore
+        const location = disCountry.getDistrictByContainerPos(px);
+        if (location && location.adcode) {
+            createProvinceLayer(location.adcode, 2);
+            console.log('location', location, event);
+            map.panTo([event.lnglat.lng, event.lnglat.lat])
+            map.setCity(location.NAME_CHN, (e) => {
+                console.log('setCity', e)
+            });
+        }
+    }
     const initDistrictLayer = () => {
         map.setCenter([104.195397, 35.86166]);
-        map.setZoom(4)
+        map.setZoom(4);
         const disCountry = new AMap.DistrictLayer.Country({
-            zIndex: 10,
+            // zIndex: 10,
             SOC: 'CHN',
             depth: 1,
             styles: {
@@ -104,74 +193,22 @@ function AMapCountry(props: AMapCountry) {
                 }
             }
         });
+        setDisCountry([disCountry])
         map.setLayers([disCountry]);
-        const renderMarker = debounce((event, location) => {
-            const id = Date.now();
-            const marker = new window.AMap.Marker({
-                position: event.lnglat,
-                content: `<div id="${id}"></div>`,
-                offset: new AMap.Pixel(5, 5),
-
-            })
-            map.clearMap();
-            map.add(marker);
-            setMarkerList([marker])
-            const domNode = document.getElementById(`${id}`);
-            const root = createRoot(domNode);
-            root.render(<MarkerInfo title={location.NAME_CHN} />)
-        }, 50)
-
-        const handleMouseMove = (event) => {
-            var px = event.pixel;
-            // 拾取所在位置的行政区
-            // @ts-ignore
-            const location = disCountry.getDistrictByContainerPos(px);
-            if (location && location.adcode_pro) {
-                renderMarker(event, location)
-                disCountry.setStyles({
-                    // @ts-ignore
-                    'fill': function (props) {
-                        return props.adcode_pro === location.adcode_pro ? 'rgb(255,140,0)' : getColorByDGP(props.adcode_pro)
-                    }
-                })
-            } else {
-                map.clearMap();
-                disCountry.setStyles({
-                    // @ts-ignore
-                    'fill': function (props) {
-                        return getColorByDGP(props.adcode_pro)
-                    }
-                })
-
-            }
-        }
-        map.on('mousemove', handleMouseMove);
-        map.on('dblclick', (event) => {
-            var px = event.pixel;
-            // 拾取所在位置的行政区
-            // @ts-ignore
-            const location = disCountry.getDistrictByContainerPos(px);
-            if (location && location.adcode) {
-                createProvinceLayer(location.adcode, 2);
-                console.log('location', location, event);
-                map.panTo([event.lnglat.lng, event.lnglat.lat])
-                map.setCity(location.NAME_CHN, (e) => {
-                    console.log('setCity', e)
-                });
-            }
-
-        });
+        disCountry.on('mousemove', (event) => handleCountryMouseMove(event, disCountry));
+        map.on('dblclick', (event) => handleDbClick(event, disCountry));
 
         // map.on('mouseout', removeMarker);
     }
     const createProvinceLayer = (code, dep) => {
         map.clearMap();
-        // map.setZoom(8, false, 200);
-        // map.setCenter
+        map.remove([...disCountry]);
+        map.off('dblclick', (event) => handleDbClick(event, disCountry));
+
         const disProvince = new AMap.DistrictLayer.Province({
             zIndex: 14,
             adcode: [code],
-            depth: 2,
+            depth: 1,
             styles: {
                 // @ts-ignore
                 'fill': function (properties) {
@@ -180,7 +217,6 @@ function AMapCountry(props: AMapCountry) {
                     // adcode_pro
                     // adcode_cit
                     // adcode
-
                     const adcode = properties.adcode;
                     const fill = gradientBlueColor(adcode);
                     return fill;
@@ -191,6 +227,7 @@ function AMapCountry(props: AMapCountry) {
             }
         });
         map.setLayers([disProvince]);
+        disProvince.on('mousemove', (event) => handleProvinceMouseMove(event, disProvince))
     }
 
     const handleBack = () => {
