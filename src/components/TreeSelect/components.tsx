@@ -4,6 +4,8 @@ import AMap from "@/AMap/AMap";
 import { Col, Row, Slider } from 'antd';
 import cn from 'classnames';
 import React from "react";
+import { AMapKey } from "@/config";
+import { AMapProvider } from "@/store/AmapContext";
 interface DataBriefProps {
     data: Array<any>
 
@@ -55,22 +57,46 @@ interface StoreMapProps {
 }
 function StoreMap_(props: StoreMapProps) {
     console.log('StoreMap_')
-    return <CardLayout
-        title='门店地图'
-    >
-        <section>
-            <AMap
-            />
+    const LoaderConfig = {
+        key: AMapKey,
+        version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+        // plugins: ["AMap.Scale"], //需要使用的的插件列表，如比例尺'AMap.Scale'，支持添加多个如：['AMap.Scale','...','...']
+    }
 
-        </section>
-    </CardLayout>
+    const mapConfig = {
+        // zooms: [4, 4] as [number, number],
+        zoomEnable: false,
+        center: [104.195397, 35.86166] as [number, number],
+        zoom: 4,
+        isHotspot: false,
+        defaultCursor: 'pointer',
+        dragEnable: false
+        // viewMode: '3D',
+    }
+    return <AMapProvider>
+        <CardLayout
+            title='门店地图'
+        >
+            <main className={styles.storeMap}>
+                <AMap
+                    config={LoaderConfig}
+                    mapOpts={mapConfig}
+                />
+                <section className={styles.rightMenu}>
+
+                </section>
+            </main>
+
+
+        </CardLayout>
+    </AMapProvider>
 }
 export const StoreMap = React.memo(StoreMap_)
 
 interface ConversionFunnelsProps {
     data: Array<any>
 }
-export function ConversionFunnels(props: ConversionFunnelsProps) {
+export const ConversionFunnels = (props: ConversionFunnelsProps) => {
     return <CardLayout
         title='ConversionFunnels'
     >
@@ -82,6 +108,8 @@ export function ConversionFunnels(props: ConversionFunnelsProps) {
             })
         }
     </CardLayout>
+
+
 }
 
 interface CardLayoutProps {

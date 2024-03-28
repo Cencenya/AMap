@@ -125,7 +125,7 @@ class _AMap {
             this.layer.push(disCountry);
             console.log('1111111', window.AMap);
             const map = new window.AMap.Map(dom, {
-                zooms: [4, 8],
+                zooms: [4, 4],
                 center: [105.602725, 37.076636],
                 zoom: 4,
                 isHotspot: false,
@@ -134,7 +134,6 @@ class _AMap {
                 layers: [...this.layer]
             });
             this.map = map;
-
             this.map.on('click', (event) => {
                 console.log('event', event);
                 var px = event.pixel;
