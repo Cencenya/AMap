@@ -6,6 +6,7 @@ import cn from 'classnames';
 import React from "react";
 import { AMapKey } from "@/config";
 import { AMapProvider } from "@/store/AmapContext";
+import AMapCountry from "@/AMap/AMapCountry";
 interface DataBriefProps {
     data: Array<any>
 
@@ -56,7 +57,6 @@ interface StoreMapProps {
     // data: Array<any>
 }
 function StoreMap_(props: StoreMapProps) {
-    console.log('StoreMap_')
     const LoaderConfig = {
         key: AMapKey,
         version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
@@ -65,12 +65,12 @@ function StoreMap_(props: StoreMapProps) {
 
     const mapConfig = {
         // zooms: [4, 4] as [number, number],
-        zoomEnable: false,
+        // zoomEnable: false,
         center: [104.195397, 35.86166] as [number, number],
         zoom: 4,
         isHotspot: false,
         defaultCursor: 'pointer',
-        dragEnable: false
+        // dragEnable: false
         // viewMode: '3D',
     }
     return <AMapProvider>
@@ -78,10 +78,13 @@ function StoreMap_(props: StoreMapProps) {
             title='门店地图'
         >
             <main className={styles.storeMap}>
+
                 <AMap
                     config={LoaderConfig}
-                    mapOpts={mapConfig}
-                />
+                    mapOpts={mapConfig}>
+                    <AMapCountry />
+                </AMap>
+
                 <section className={styles.rightMenu}>
 
                 </section>

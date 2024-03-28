@@ -21,7 +21,6 @@ export const AMapContext = createContext<{
 
 // 定义每个state的reducer函数
 const mainReducer = (state: InitialStateType, action: Actions) => {
-    console.log('mainReducer', state, action)
     return ({
         map: mapReducer(state.map, action),
         AMap: AMapReducer(state.AMap, action)
@@ -41,7 +40,6 @@ interface AMapProviderProps {
 // provider组件
 export const AMapProvider: React.FC<AMapProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(mainReducer, initialState);
-    console.log('AMapProvider')
     return (
         <AMapContext.Provider value={{ state, dispatch }}>
             {children}

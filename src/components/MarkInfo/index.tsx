@@ -7,7 +7,7 @@ interface MarkerInfoProps {
 const MarkerInfo = (props: MarkerInfoProps) => {
     const { title } = props
     return <main className={styles.markinfoContainer}>
-        <title>{title}</title>
+        <h1>{title}</h1>
         <section>
 
         </section>

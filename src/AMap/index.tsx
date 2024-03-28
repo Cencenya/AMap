@@ -14,7 +14,6 @@ function retryOnMissingAMap(retries: number) {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function (dom: string, options: MapInstanceOptions) {
-            console.log('retryOnMissingAMap', window.AMap)
             for (let i = 0; i < retries; i++) {
                 if (typeof AMap === 'undefined' && typeof window.AMap === 'undefined') {
 

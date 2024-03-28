@@ -86,7 +86,6 @@ const HomePageConfiguration: React.FC = () => {
         setAutoExpandParent(false);
     };
     const onCheck = (checkedKeysValue: React.Key[], info: any) => {
-        console.log('onCheck', checkedKeysValue);
         const map = {
 
         }

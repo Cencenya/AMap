@@ -8,8 +8,6 @@ export default function useAMapContext() {
     const { state, dispatch } = useContext(AMapContext);
     const { map, AMap } = state;
     const updateAMapLoader = (_AMap: _AMap) => {
-        console.log('updateAMapLoader', _AMap)
-        console.log('state', dispatch, state)
         dispatch({
             type: DispatchActionTypes.AMAP,
             payload: _AMap
@@ -23,12 +21,18 @@ export default function useAMapContext() {
     }
 
     const destroyMap = () => {
-        if (!map) return;
-        map.remove(map.getLayers());
-        // map.clearEvents();
-        map.clearMap();
-        map.destroy();
-        updateMap(null);
+        try {
+            if (!map) return;
+            map.remove(map.getLayers());
+            // map.clearEvents();
+            map.clearMap();
+            map.destroy();
+            updateMap(null);
+
+        } catch (error) {
+            console.log('destroyMap', error)
+        }
+
     }
 
 
