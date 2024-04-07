@@ -22,7 +22,6 @@ export function DataBrief(props: DataBriefProps) {
         <div className={wrap ? styles.wrapList : styles.list}>
             {props.data.map((item, index) => (
                 <div key={index} className={styles.card}>
-
                     {item.title}
                 </div>
             ))}

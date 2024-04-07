@@ -7,6 +7,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { MapKey, fetchTreeDataSource, initMap } from './useData';
 import { ConversionFunnels, DataBrief, DataReports, StoreMap, StoreStatus } from './components';
+import useIsFirstRender from '@/hooks/useIsFirstRender';
 const x = 3;
 const y = 2;
 const z = 1;
@@ -74,6 +75,7 @@ const HomePageConfiguration: React.FC = () => {
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
     const [dataSource, updateDataSource] = useState(initialMap);
+    const isfirstRender = useIsFirstRender();
     const onDragEnter: TreeProps['onDragEnter'] = (info) => {
         // console.log(info);
         // expandedKeys, set it when controlled is needed
