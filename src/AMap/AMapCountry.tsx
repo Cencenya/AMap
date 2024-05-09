@@ -94,6 +94,9 @@ function AMapCountry(props: AMapCountry) {
             offset: new AMap.Pixel(5, 5),
 
         })
+        // new window.AMap.Polygon({
+
+        // })
         map.clearMap();
         map.add(marker);
         // setMarkerList([marker])
@@ -170,9 +173,7 @@ function AMapCountry(props: AMapCountry) {
             createProvinceLayer(location.adcode, 2);
             console.log('location', location, event);
             map.panTo([event.lnglat.lng, event.lnglat.lat])
-            map.setCity(location.NAME_CHN, (e) => {
-                console.log('setCity', e)
-            });
+            map.setCity(location.NAME_CHN,);
         }
     }
     const initDistrictLayer = () => {
@@ -194,8 +195,8 @@ function AMapCountry(props: AMapCountry) {
             }
         });
         setDisCountry([disCountry])
-        map.setLayers([disCountry]);
-        disCountry.on('mousemove', (event) => handleCountryMouseMove(event, disCountry));
+        // map.setLayers([disCountry]);
+        // disCountry.on('mousemove', (event) => handleCountryMouseMove(event, disCountry));
         map.on('dblclick', (event) => handleDbClick(event, disCountry));
 
         // map.on('mouseout', removeMarker);
@@ -207,7 +208,7 @@ function AMapCountry(props: AMapCountry) {
 
         const disProvince = new AMap.DistrictLayer.Province({
             zIndex: 14,
-            adcode: [code],
+            // adcode: [code],
             depth: 1,
             styles: {
                 // @ts-ignore
@@ -226,8 +227,8 @@ function AMapCountry(props: AMapCountry) {
                 'county-stroke': 'grey' // 中国区县边界
             }
         });
-        map.setLayers([disProvince]);
-        disProvince.on('mousemove', (event) => handleProvinceMouseMove(event, disProvince))
+        // map.setLayers([disProvince]);
+        // disProvince.on('mousemove', (event) => handleProvinceMouseMove(event, disProvince))
     }
 
     const handleBack = () => {

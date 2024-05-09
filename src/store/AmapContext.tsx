@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 import { Actions, mapReducer, AMapReducer } from "./reducer";
 
+
 type InitialStateType = {
     map: AMap.Map | null, // 实例
     AMap: typeof AMap | null; // 构造函数
